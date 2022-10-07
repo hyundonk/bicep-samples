@@ -150,3 +150,9 @@ az sig image-version create --resource-group exampleRG \
 
 
 
+### Reference 
+
+[Azure VM Image Builder overview - Azure Virtual Machines | Microsoft Learn](https://learn.microsoft.com/en-us/azure/virtual-machines/image-builder-overview?tabs=azure-powershell)
+
+[Use Azure Image Builder & Azure Compute Gallery for Linux VMs - Azure Virtual Machines | Microsoft Learn](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/image-builder-gallery)
+
