@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": {
+      "value": "azureuser"
+    },
+    "dnsLabelPrefix": {
+      "value": "mytestprefix"
+    },
+    "adminPasswordOrKey": {
+      "value": "Passw0rd!123"
+    },
+    "dcrName": {
+      "value": "mylinuxdemodcr"
+    },
+    "logAnalyticsWorkspaceName": {
+      "value": "hyukdemologanalytics1"
+    },
+    "dcrAssociationName": {
+      "value": "my-linux-vm-my-dcr"
+    },
+    "dataCollectionEndpointName": {
+      "value": "hyukdemodce"
+    },
+    "dcrName_customlog": {
+      "value": "mycustomlogdemodcr"
+    },
+    "customtable_name": {
+      "value": "MyTable_CL"
+    },
+    "eventHubNamespaceName": {
+      "value": "hyukdemoehns"
+    },
+     "eventHubName": {
+      "value": "hyukdemoeh"
+    }
+ 
+  }
+}
