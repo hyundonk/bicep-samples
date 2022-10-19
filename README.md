@@ -156,3 +156,94 @@ az sig image-version create --resource-group exampleRG \
 
 [Use Azure Image Builder & Azure Compute Gallery for Linux VMs - Azure Virtual Machines | Microsoft Learn](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/image-builder-gallery)
 
+
+
+## 3. Azure Monitor with Azure Monitor Agent
+
+Azure Monitor Agent (AMA) collects performance metric data and log data from Azure VM or on-prem VM and delivers it to Azure Monitor.
+
+Also custom log files in a VM can be collected to Azure Monitor (Log Analytics workspace) by Azure Monitor Agent. (Currently in preview)
+
+The sample bicep file (./3.azure_monitor/azuredeploy.bicep) creates the following resources.
+
+- Create a VNET and a Ubuntu 18.04 Virtual Machine in it. (A system-managed Identity is assigned to the VM)
+
+- Install Azure Monitor Linux Agent on the VM
+
+- Create a Log Analytics workspace
+
+- Create a custom table ("MyTable_CL") in the Log Analytics workspace
+
+- Create a Event Hub namespace and a event hub for exporting Log Analytics custom table data to event hub. (And then to the Azure Data Explorer. Azure Data Explorer integration is not included in this scope. )
+
+- A data export rule of the custom table to the event hub
+
+- A Data Collection Rule for
+
+  1) Collecting performance metrics to Azure Monitor Metric Store.
+  2) Collect Syslog to Azure Monitor Log Analytics
+
+- A Data Collection Endpoint for custom log collection to the Log Analytics
+
+- Another Data Collection Rule for
+
+  - Collecting custom log using the data collection endpoint to the custom table in the Log Analytics workspace. In this example, '/var/log/auth.log' is collected the the custom table
+
+  
+
+Below is the overall diagram of conceptual data flow.
+
+ ![thumbnail image 1 of blog post titled  	 	 	  	 	 	 				 		 			 				 						 							Azure Monitor agent and Data Collection Rules 							 						 					 			 		 	 			 	 	 	 	 	 ](https://techcommunity.microsoft.com/t5/image/serverpage/image-id/315158iD4BA1950C36B6324/image-size/large?v=v2&px=999)
+
+Data export in Log Analytics workspace lets you continuously export data per selected tables in your workspace, to an Azure Storage Account or Azure Event Hubs as it arrives to Azure Monitor pipeline. 
+
+![image-20221019164243784](README.assets/image-20221019164243784.png)
+
+
+
+You can deploy the demo bicep file with the following steps.
+
+```bash
+# Clone the repository
+git clone https://github.com/hyundonk/bicep-samples.git
+cd bicep-samples/3.azure_monitor
+
+# Create a resource group
+az group create --name ExampleGroup --location koreacentral
+
+# Deploy resources
+az deployment group create   --name ExampleDeployment   --resource-group ExampleGroup   --template-file azuredeploy.bicep   --parameters azuredeploy.parameters.json
+```
+
+
+
+After deployment is completes, you can see the following metrics and logs.
+
+### Guest Metrics (in azure.vm.linux.guestmetrics namespace)
+
+![image-20221019164831252](README.assets/image-20221019164831252.png)
+
+
+
+### Syslog collected
+
+![image-20221019165312556](README.assets/image-20221019165312556.png)
+
+### Custom log (/var/log/auth.log) collected
+
+![image-20221019165400116](README.assets/image-20221019165400116.png)
+
+
+
+Ref)
+
+[Azure Monitor Agent overview - Azure Monitor | Microsoft Learn](https://learn.microsoft.com/en-us/azure/azure-monitor/agents/agents-overview)
+
+[Data Collection Rules in Azure Monitor - Azure Monitor | Microsoft Learn](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/data-collection-rule-overview)
+
+[Collect text and IIS logs with Azure Monitor agent (preview) - Azure Monitor | Microsoft Learn](https://learn.microsoft.com/en-us/azure/azure-monitor/agents/data-collection-text-log)
+
+[Log Analytics workspace data export in Azure Monitor - Azure Monitor | Microsoft Learn](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/logs-data-export?tabs=portal)
+
+
+
